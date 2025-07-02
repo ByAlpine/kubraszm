@@ -36,32 +36,14 @@
                 0 0 32px #fff,
                 0 0 40px #ff69b4;
         }
-        .love-gif-text {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: 40px;
-            font-size: 2.2rem;
-            background: rgba(255,255,255,0.1);
-            border-radius: 20px;
-            padding: 10px 30px;
-            color: #fff;
-            text-shadow:
-                0 0 8px #ff69b4,
-                0 0 16px #ff69b4,
-                0 0 24px #ff69b4,
-                0 0 32px #fff,
-                0 0 40px #ff69b4;
-        }
         .buttons {
             margin-top: 30px;
             display: flex;
             justify-content: center;
             align-items: center;
             position: relative;
-            width: 100%;
-            max-width: 350px;
-            min-height: 56px;
+            width: 350px; /* GIF genişliğiyle aynı */
+            height: 56px;
         }
         #evet {
             background: #27ae60;
@@ -119,6 +101,23 @@
             top: 0; left: 0;
             z-index: 10;
         }
+        .love-gif-text {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 40px;
+            font-size: 2.2rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 10px 30px;
+            color: #fff;
+            text-shadow:
+                0 0 8px #ff69b4,
+                0 0 16px #ff69b4,
+                0 0 24px #ff69b4,
+                0 0 32px #fff,
+                0 0 40px #ff69b4;
+        }
         .love-gif-wrapper {
             display: flex;
             flex-direction: column;
@@ -173,15 +172,15 @@
         resizeCanvas();
         window.addEventListener('resize', resizeCanvas);
 
-        // Hayır butonu animasyonlu kaçma efekti
-        hayirBtn.addEventListener('mouseover', function () {
+        // Hayır butonu animasyonlu kaçma efekti (tıklama ile)
+        hayirBtn.addEventListener('click', function () {
             const btnWidth = hayirBtn.offsetWidth;
             const btnHeight = hayirBtn.offsetHeight;
             const padding = 20;
             const maxX = buttonsContainer.offsetWidth - btnWidth - padding;
-            const maxY = buttonsContainer.offsetHeight - btnHeight;
+            const maxY = buttonsContainer.offsetHeight - btnHeight + 20;
 
-            // İlk mouseover'da butonun konumunu ayarla
+            // İlk tıklamada butonun konumunu ayarla
             if (hayirBtnInitial) {
                 hayirBtn.style.left = "50%";
                 hayirBtn.style.top = "0";
