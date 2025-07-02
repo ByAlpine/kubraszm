@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>kubraszm</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        .gif-container {
+            position: relative;
+            display: inline-block;
+            margin-top: 40px;
+        }
+        .gif-text, .love-gif-text {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2rem;
+            font-weight: bold;
+            color: #fff;
+            text-shadow:
+                0 0 8px #ff69b4,
+                0 0 16px #ff69b4,
+                0 0 24px #ff69b4,
+                0 0 32px #fff,
+                0 0 40px #ff69b4;
+            pointer-events: none;
+            z-index: 2;
+        }
+        .love-gif-text {
+            position: static;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 40px;
+            font-size: 2.2rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 10px 30px;
+            color: #fff;
+            text-shadow:
+                0 0 8px #ff69b4,
+                0 0 16px #ff69b4,
+                0 0 24px #ff69b4,
+                0 0 32px #fff,
+                0 0 40px #ff69b4;
+        }
+        .buttons {
+            margin-top: 30px;
+            display: flex;
+            gap: 20px;
+        }
+        button {
+            padding: 12px 32px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        #evet {
+            background: #27ae60;
+            color: #fff;
+        }
+        #evet:hover {
+            background: #219150;
+        }
+        #hayir {
+            background: #e74c3c;
+            color: #fff;
+            position: relative;
+        }
+        .fade-out {
+            animation: fadeOut 1s forwards;
+        }
+        .fade-in {
+            animation: fadeIn 1s forwards;
+        }
+        @keyframes fadeOut {
+            to { opacity: 0; transform: scale(0.95);}
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(1.05);}
+            to { opacity: 1; transform: scale(1);}
+        }
+        .love-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0;
+            width: 100vw;
+            height: 100vh;
+            justify-content: center;
+            position: fixed;
+            top: 0; left: 0;
+            z-index: 10;
+        }
+        .love-gif-wrapper {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 11;
+        }
+        #hearts-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 9;
+        }
+    </style>
+</head>
+<body>
+    <div id="main-content">
+        <div class="gif-container">
+            <img id="main-gif" src="gif.1.gif" alt="Sevgi Dolu GIF" width="350">
+            <div class="gif-text">Beni Seviyor Musun?</div>
+        </div>
+        <div class="buttons">
+            <button id="evet">Evet</button>
+            <button id="hayir">Hayır</button>
+        </div>
+    </div>
+    <div id="love-content" class="love-container" style="display:none;">
+        <canvas id="hearts-canvas"></canvas>
+        <div class="love-gif-text">Ben de seni seviyourummm <span style="font-size:2.2rem;">❤️</span></div>
+        <div class="love-gif-wrapper">
+            <img src="gif.2.gif" alt="Aşk GIF" width="200">
+        </div>
+    </div>
+    <script>
+        const hayirBtn = document.getElementById('hayir');
+        const evetBtn = document.getElementById('evet');
+        const mainContent = document.getElementById('main-content');
+        const loveContent = document.getElementById('love-content');
+        const canvas = document.getElementById('hearts-canvas');
+        let heartsActive = false;
+
+        // Canvas ilk açılışta ayarlansın
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // Hayır butonu kaçma efekti
+        hayirBtn.addEventListener('mouseover', function () {
+            const btnWidth = hayirBtn.offsetWidth;
+            const btnHeight = hayirBtn.offsetHeight;
+            const padding = 20;
+            const maxX = window.innerWidth - btnWidth - padding;
+            const maxY = window.innerHeight - btnHeight - padding;
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+
+            hayirBtn.style.position = 'fixed';
+            hayirBtn.style.left = randomX + 'px';
+            hayirBtn.style.top = randomY + 'px';
+        });
+
+        // Evet butonuna tıklanınca animasyonlu geçiş ve kalpler
+        evetBtn.addEventListener('click', function () {
+            mainContent.classList.add('fade-out');
+            setTimeout(() => {
+                mainContent.style.display = 'none';
+                loveContent.style.display = 'flex';
+                loveContent.classList.add('fade-in');
+                setTimeout(() => {
+                    startHearts();
+                }, 500);
+            }, 1000);
+        });
+
+        // Kalp animasyonu
+        function startHearts() {
+            if (heartsActive) return;
+            heartsActive = true;
+            resizeCanvas();
+            const ctx = canvas.getContext('2d');
+            const heartColors = [
+                "#ff69b4", "#ff4d6d", "#ffb347", "#7ed6df", "#70a1ff", "#e056fd", "#f6e58d"
+            ];
+            const heartEmojis = ["❤️","💙","💚","💛","💜","🧡","🤍"];
+            let hearts = [];
+
+            function Heart() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 28 + 18;
+                this.alpha = Math.random() * 0.5 + 0.5;
+                this.color = heartColors[Math.floor(Math.random() * heartColors.length)];
+                this.emoji = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+                this.dx = (Math.random() - 0.5) * 1.5;
+                this.dy = (Math.random() - 0.5) * 1.5;
+                this.angle = Math.random() * Math.PI * 2;
+                this.spin = (Math.random() - 0.5) * 0.04;
+            }
+            Heart.prototype.draw = function(ctx) {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.font = `${this.size}px serif`;
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.angle);
+                ctx.fillText(this.emoji, 0, 0);
+                ctx.restore();
+            }
+            Heart.prototype.update = function() {
+                this.x += this.dx;
+                this.y += this.dy;
+                this.angle += this.spin;
+                // Ekrandan çıkarsa yeniden doğsun
+                if (this.x < -50 || this.x > canvas.width + 50 || this.y < -50 || this.y > canvas.height + 50) {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                }
+            }
+
+            // Kalpler oluştur
+            for (let i = 0; i < 90; i++) {
+                hearts.push(new Heart());
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        for (let heart of hearts) {
+                            heart.update();
+                            heart.draw(ctx);
+                        }
+                        requestAnimationFrame(animate);
+                    }
+                    animate();
+                }
