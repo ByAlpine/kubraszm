@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: #fff; /* GIF arka planı ile aynı renk */
+            background: #fff;
             margin: 0;
             padding: 0;
             display: flex;
@@ -56,23 +56,20 @@
         .buttons {
             margin-top: 30px;
             display: flex;
-            gap: 20px;
             justify-content: center;
+            align-items: center;
             position: relative;
-            width: 350px; /* GIF genişliğiyle aynı */
-        }
-        button {
-            padding: 12px 32px;
-            font-size: 1.2rem;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.2s;
+            width: 100%;
+            max-width: 350px;
+            min-height: 56px;
         }
         #evet {
             background: #27ae60;
             color: #fff;
-            position: static;
+            position: relative;
+            z-index: 1;
+            margin-right: 20px;
+            transition: background 0.2s;
         }
         #evet:hover {
             background: #219150;
@@ -88,6 +85,14 @@
                 left 0.4s cubic-bezier(.68,-0.55,.27,1.55),
                 top 0.4s cubic-bezier(.68,-0.55,.27,1.55),
                 transform 0.4s cubic-bezier(.68,-0.55,.27,1.55);
+            z-index: 2;
+        }
+        button {
+            padding: 12px 32px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
         }
         .fade-out {
             animation: fadeOut 1s forwards;
@@ -174,7 +179,7 @@
             const btnHeight = hayirBtn.offsetHeight;
             const padding = 20;
             const maxX = buttonsContainer.offsetWidth - btnWidth - padding;
-            const maxY = 60; // Dikeyde çok fazla kaçmasın diye sabit değer
+            const maxY = buttonsContainer.offsetHeight - btnHeight;
 
             // İlk mouseover'da butonun konumunu ayarla
             if (hayirBtnInitial) {
