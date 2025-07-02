@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: #f9f9f9;
+            background: #fff; /* GIF arka planı ile aynı renk */
             margin: 0;
             padding: 0;
             display: flex;
@@ -57,6 +57,9 @@
             margin-top: 30px;
             display: flex;
             gap: 20px;
+            justify-content: center;
+            position: relative;
+            width: 100%;
         }
         button {
             padding: 12px 32px;
@@ -69,6 +72,7 @@
         #evet {
             background: #27ae60;
             color: #fff;
+            position: static;
         }
         #evet:hover {
             background: #219150;
@@ -76,6 +80,14 @@
         #hayir {
             background: #e74c3c;
             color: #fff;
+            position: absolute;
+            left: 50%;
+            top: 0;
+            transform: translateX(-50%);
+            transition:
+                left 0.4s cubic-bezier(.68,-0.55,.27,1.55),
+                top 0.4s cubic-bezier(.68,-0.55,.27,1.55),
+                transform 0.4s cubic-bezier(.68,-0.55,.27,1.55);
         }
         .fade-out {
             animation: fadeOut 1s forwards;
@@ -125,10 +137,10 @@
                 Beni Seviyor Musun?
             </div>
             <img id="main-gif" src="gif.1.gif" alt="Sevgi Dolu GIF" width="350">
-        </div>
-        <div class="buttons">
-            <button id="evet">Evet</button>
-            <button id="hayir">Hayır</button>
+            <div class="buttons" id="buttons-container">
+                <button id="evet">Evet</button>
+                <button id="hayir">Hayır</button>
+            </div>
         </div>
     </div>
     <div id="love-content" class="love-container" style="display:none;">
@@ -144,7 +156,9 @@
         const mainContent = document.getElementById('main-content');
         const loveContent = document.getElementById('love-content');
         const canvas = document.getElementById('hearts-canvas');
+        const buttonsContainer = document.getElementById('buttons-container');
         let heartsActive = false;
+        let hayirBtnInitial = true;
 
         // Canvas ilk açılışta ayarlansın
         function resizeCanvas() {
@@ -154,19 +168,29 @@
         resizeCanvas();
         window.addEventListener('resize', resizeCanvas);
 
-        // Hayır butonu kaçma efekti
+        // Hayır butonu animasyonlu kaçma efekti
         hayirBtn.addEventListener('mouseover', function () {
             const btnWidth = hayirBtn.offsetWidth;
             const btnHeight = hayirBtn.offsetHeight;
+            const containerRect = buttonsContainer.getBoundingClientRect();
             const padding = 20;
-            const maxX = window.innerWidth - btnWidth - padding;
-            const maxY = window.innerHeight - btnHeight - padding;
+            const maxX = buttonsContainer.offsetWidth - btnWidth - padding;
+            const maxY = 60; // Dikeyde çok fazla kaçmasın diye sabit değer
+
+            // İlk mouseover'da butonun konumunu ayarla
+            if (hayirBtnInitial) {
+                hayirBtn.style.left = "50%";
+                hayirBtn.style.top = "0";
+                hayirBtn.style.transform = "translateX(-50%)";
+                hayirBtnInitial = false;
+            }
+
             const randomX = Math.floor(Math.random() * maxX);
             const randomY = Math.floor(Math.random() * maxY);
 
-            hayirBtn.style.position = 'fixed';
-            hayirBtn.style.left = randomX + 'px';
-            hayirBtn.style.top = randomY + 'px';
+            hayirBtn.style.left = randomX + "px";
+            hayirBtn.style.top = randomY + "px";
+            hayirBtn.style.transform = "translateX(0)";
         });
 
         // Evet butonuna tıklanınca animasyonlu geçiş ve kalpler
