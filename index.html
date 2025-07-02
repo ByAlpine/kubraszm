@@ -18,29 +18,25 @@
             overflow: hidden;
         }
         .gif-container {
-            position: relative;
-            display: inline-block;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             margin-top: 40px;
         }
-        .gif-text, .love-gif-text {
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 2rem;
-            font-weight: bold;
+        .gif-text {
+            margin-bottom: 18px;
+            font-size: 2.7rem;
+            font-weight: 900;
             color: #fff;
+            text-align: center;
             text-shadow:
                 0 0 8px #ff69b4,
                 0 0 16px #ff69b4,
                 0 0 24px #ff69b4,
                 0 0 32px #fff,
                 0 0 40px #ff69b4;
-            pointer-events: none;
-            z-index: 2;
         }
         .love-gif-text {
-            position: static;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -80,7 +76,6 @@
         #hayir {
             background: #e74c3c;
             color: #fff;
-            position: relative;
         }
         .fade-out {
             animation: fadeOut 1s forwards;
@@ -108,7 +103,6 @@
             z-index: 10;
         }
         .love-gif-wrapper {
-            position: relative;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -127,8 +121,10 @@
 <body>
     <div id="main-content">
         <div class="gif-container">
+            <div class="gif-text">
+                Beni Seviyor Musun?
+            </div>
             <img id="main-gif" src="gif.1.gif" alt="Sevgi Dolu GIF" width="350">
-            <div class="gif-text">Beni Seviyor Musun?</div>
         </div>
         <div class="buttons">
             <button id="evet">Evet</button>
@@ -137,7 +133,7 @@
     </div>
     <div id="love-content" class="love-container" style="display:none;">
         <canvas id="hearts-canvas"></canvas>
-        <div class="love-gif-text">Ben de seni seviyourummm <span style="font-size:2.2rem;">❤️</span></div>
+        <div class="love-gif-text">Ben de Seni Seviyorummm <span style="font-size:2.2rem;">❤️</span></div>
         <div class="love-gif-wrapper">
             <img src="gif.2.gif" alt="Aşk GIF" width="200">
         </div>
@@ -237,11 +233,14 @@
 
             function animate() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                        for (let heart of hearts) {
-                            heart.update();
-                            heart.draw(ctx);
-                        }
-                        requestAnimationFrame(animate);
-                    }
-                    animate();
+                for (let heart of hearts) {
+                    heart.update();
+                    heart.draw(ctx);
                 }
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+    </script>
+</body>
+</html>
