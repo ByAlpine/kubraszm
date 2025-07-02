@@ -59,7 +59,7 @@
             gap: 20px;
             justify-content: center;
             position: relative;
-            width: 100%;
+            width: 350px; /* GIF genişliğiyle aynı */
         }
         button {
             padding: 12px 32px;
@@ -172,7 +172,6 @@
         hayirBtn.addEventListener('mouseover', function () {
             const btnWidth = hayirBtn.offsetWidth;
             const btnHeight = hayirBtn.offsetHeight;
-            const containerRect = buttonsContainer.getBoundingClientRect();
             const padding = 20;
             const maxX = buttonsContainer.offsetWidth - btnWidth - padding;
             const maxY = 60; // Dikeyde çok fazla kaçmasın diye sabit değer
