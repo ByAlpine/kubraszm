@@ -41,8 +41,9 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            gap: 20px;
             position: relative;
-            width: 350px; /* GIF genişliğiyle aynı */
+            width: 350px;
             height: 56px;
         }
         #evet {
@@ -50,7 +51,6 @@
             color: #fff;
             position: relative;
             z-index: 1;
-            margin-right: 20px;
             transition: background 0.2s;
         }
         #evet:hover {
@@ -59,15 +59,12 @@
         #hayir {
             background: #e74c3c;
             color: #fff;
-            position: absolute;
-            left: 50%;
-            top: 0;
-            transform: translateX(-50%);
+            position: relative;
+            z-index: 2;
             transition:
                 left 0.4s cubic-bezier(.68,-0.55,.27,1.55),
                 top 0.4s cubic-bezier(.68,-0.55,.27,1.55),
                 transform 0.4s cubic-bezier(.68,-0.55,.27,1.55);
-            z-index: 2;
         }
         button {
             padding: 12px 32px;
@@ -160,7 +157,6 @@
         const mainContent = document.getElementById('main-content');
         const loveContent = document.getElementById('love-content');
         const canvas = document.getElementById('hearts-canvas');
-        const buttonsContainer = document.getElementById('buttons-container');
         let heartsActive = false;
         let hayirBtnInitial = true;
 
@@ -172,28 +168,42 @@
         resizeCanvas();
         window.addEventListener('resize', resizeCanvas);
 
-        // Hayır butonu animasyonlu kaçma efekti (tıklama ile)
-        hayirBtn.addEventListener('click', function () {
+        // Hayır butonu animasyonlu kaçma efekti (tüm sayfa, tekrar algılanmaz)
+        hayirBtn.addEventListener('mouseover', function () {
+            // Eğer zaten kaçıyorsa tekrar tetiklenmesin
+            if (hayirBtn.classList.contains('kaciyor')) return;
+
             const btnWidth = hayirBtn.offsetWidth;
             const btnHeight = hayirBtn.offsetHeight;
             const padding = 20;
-            const maxX = buttonsContainer.offsetWidth - btnWidth - padding;
-            const maxY = buttonsContainer.offsetHeight - btnHeight + 20;
+            const maxX = window.innerWidth - btnWidth - padding;
+            const maxY = window.innerHeight - btnHeight - padding;
 
-            // İlk tıklamada butonun konumunu ayarla
+            // İlk mouseover'da butonun konumunu ayarla ve position'ı fixed yap
             if (hayirBtnInitial) {
-                hayirBtn.style.left = "50%";
-                hayirBtn.style.top = "0";
-                hayirBtn.style.transform = "translateX(-50%)";
+                hayirBtn.style.position = "fixed";
+                const rect = hayirBtn.getBoundingClientRect();
+                hayirBtn.style.left = rect.left + "px";
+                hayirBtn.style.top = rect.top + "px";
+                hayirBtn.style.transform = "none";
                 hayirBtnInitial = false;
             }
 
-            const randomX = Math.floor(Math.random() * maxX);
-            const randomY = Math.floor(Math.random() * maxY);
+            // Kaçarken tekrar yakalanmasın
+            hayirBtn.classList.add('kaciyor');
+            hayirBtn.style.pointerEvents = "none";
+
+            const randomX = Math.floor(Math.random() * maxX) + padding / 2;
+            const randomY = Math.floor(Math.random() * maxY) + padding / 2;
 
             hayirBtn.style.left = randomX + "px";
             hayirBtn.style.top = randomY + "px";
-            hayirBtn.style.transform = "translateX(0)";
+
+            // 400ms sonra tekrar yakalanabilir olsun, ama mouse hala üstündeyse tekrar kaçmasın
+            setTimeout(() => {
+                hayirBtn.style.pointerEvents = "auto";
+                hayirBtn.classList.remove('kaciyor');
+            }, 400);
         });
 
         // Evet butonuna tıklanınca animasyonlu geçiş ve kalpler
